@@ -1,0 +1,17 @@
+# set size of shell history
+export HISTSIZE=1000000000
+export SAVEHIST=$HISTSIZE
+# add timestamp to history entries
+setopt EXTENDED_HISTORY
+autoload -U compinit; compinit
+
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git
+zstyle ':vcs_info:git:*' formats '(%F{yellow}%b%f%u%c) '
+zstyle ':vcs_info:git:*' actionformats '(%F{yellow}%b%f|%F{red}%a%f%u%c) '
+zstyle ':vcs_info:git:*' check-for-changes true
+zstyle ':vcs_info:git:*' unstagedstr '%F{red}*%f'
+zstyle ':vcs_info:git:*' stagedstr '%F{green}+%f'
+precmd() { vcs_info }
+setopt PROMPT_SUBST
+PROMPT='%F{cyan}%n%f:%F{blue}%~%f ${vcs_info_msg_0_}% '

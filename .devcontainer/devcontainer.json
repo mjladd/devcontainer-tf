@@ -1,0 +1,65 @@
+{
+  "name": "Terraform Development",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "..",
+    "options": [
+      "--progress=plain"
+    ]
+  },
+  // Mount cache volumes for better performance and persist credentials
+  "mounts": [
+    // Package manager caches
+    "source=uv-cache,target=/root/.cache/uv,type=volume",
+    "source=apt-cache,target=/var/cache/apt,type=volume",
+    "source=apt-lib,target=/var/lib/apt,type=volume",
+    // SSH and AWS credentials from host
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/root/.ssh,type=bind,readonly",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.aws,target=/root/.aws,type=bind,readonly"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/aws-cli:1": {
+      "version": "latest"
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {
+      "version": "latest"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "hashicorp.terraform",
+        "amazonwebservices.aws-toolkit-vscode",
+        "redhat.vscode-yaml",
+        "ms-vscode.makefile-tools",
+        "ms-python.python",
+        "bierner.markdown-mermaid",
+        "streetsidesoftware.code-spell-checker"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terraform.languageServer.enable": true,
+        "terraform.validation.enableEnhancedValidation": true,
+        "[terraform]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "hashicorp.terraform"
+        },
+        "[terraform-vars]": {
+          "editor.formatOnSave": true,
+          "editor.defaultFormatter": "hashicorp.terraform"
+        },
+        // Editor
+        "editor.formatOnSave": true,
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        // Git
+        "git.autofetch": true,
+        "git.confirmSync": false
+      }
+    }
+  },
+  "postCreateCommand": "pre-commit install",
+  // Container settings
+  "updateRemoteUserUID": true,
+  "remoteUser": "root"
+}

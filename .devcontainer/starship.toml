@@ -1,0 +1,41 @@
+# ~/.config/starship.toml
+
+[character]
+success_symbol = "[➜](bold green)"
+error_symbol = "[➜](bold red)"
+
+[package]
+disabled = true
+
+[python]
+symbol = "🐍 "
+# pyenv_version_name = true
+style = "bold yellow"
+
+[git_branch]
+style = "bold purple"
+symbol = "🌱 "
+
+[git_commit]
+style = "bold white"
+
+[git_state]
+style = "bold red"
+
+[aws]
+disabled = false
+
+[gcloud]
+disabled = true
+
+[azure]
+disabled = true
+
+[cmd_duration]
+min_time = 500
+format = 'underwent [$duration](bold yellow)'
+
+[directory]
+truncation_length = 255
+truncate_to_repo = true
+use_logical_path = false
