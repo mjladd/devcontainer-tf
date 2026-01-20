@@ -51,10 +51,7 @@
         // Editor
         "editor.formatOnSave": true,
         "files.trimTrailingWhitespace": true,
-        "files.insertFinalNewline": true,
-        // Git
-        "git.autofetch": true,
-        "git.confirmSync": false
+        "files.insertFinalNewline": true
       }
     }
   },
