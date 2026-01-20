@@ -29,7 +29,7 @@ Create `main.tf`:
 ```hcl
 terraform {
   required_version = ">= 1.0.0"
-  
+
   required_providers {
     null = {
       source  = "hashicorp/null"
@@ -307,18 +307,18 @@ Create `locals.tf`:
 locals {
   # Simple values
   project_prefix = "${var.app_name}-${var.environment}"
-  
+
   # Conditional logic
   is_production = var.environment == "production"
   log_level     = local.is_production ? "warn" : "debug"
-  
+
   # Computed lists
   all_tags = concat(
     ["managed-by:terraform"],
     var.features,
     local.is_production ? ["critical"] : []
   )
-  
+
   # Map transformation
   service_endpoints = {
     for name, config in var.services :
@@ -356,7 +356,7 @@ resource "null_resource" "file_reader" {
 }
 ```
 
-### Using templatefile
+### Using template file
 
 Create `templates/config.tpl`:
 
@@ -541,7 +541,7 @@ locals {
       debug    = false
     }
   }
-  
+
   current_config = lookup(local.workspace_config, terraform.workspace, local.workspace_config["default"])
 }
 
@@ -567,10 +567,10 @@ resource "null_resource" "lifecycle_demo" {
   lifecycle {
     # Create new resource before destroying old one
     create_before_destroy = true
-    
+
     # Prevent destruction
     # prevent_destroy = true
-    
+
     # Ignore changes to specific attributes
     ignore_changes = [
       triggers["timestamp"],
@@ -652,7 +652,7 @@ resource "null_resource" "failure_handling" {
 resource "null_resource" "with_env" {
   provisioner "local-exec" {
     command = "echo \"App: $APP_NAME, Env: $DEPLOY_ENV\""
-    
+
     environment = {
       APP_NAME   = var.app_name
       DEPLOY_ENV = var.environment
@@ -693,7 +693,7 @@ resource "null_resource" "python_script" {
 variable "instance_type" {
   type        = string
   description = "Instance size"
-  
+
   validation {
     condition     = contains(["small", "medium", "large"], var.instance_type)
     error_message = "Instance type must be small, medium, or large."
@@ -702,7 +702,7 @@ variable "instance_type" {
 
 variable "port" {
   type = number
-  
+
   validation {
     condition     = var.port >= 1024 && var.port <= 65535
     error_message = "Port must be between 1024 and 65535."
@@ -792,17 +792,3 @@ terraform destroy -target=null_resource.hello
 | `terraform output` | Show outputs |
 | `terraform workspace list` | List workspaces |
 | `terraform graph` | Generate dependency graph |
-
----
-
-## Next Steps
-
-Once comfortable with these fundamentals, you're ready to:
-
-1. Add cloud providers (AWS, GCP, Azure)
-2. Set up remote state backends (S3, GCS, Terraform Cloud)
-3. Implement CI/CD pipelines for Terraform
-4. Explore Terragrunt for DRY configurations
-5. Look into policy-as-code with Sentinel or OPA
-
-Happy Terraforming!

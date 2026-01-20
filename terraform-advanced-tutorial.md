@@ -251,7 +251,7 @@ variable "application_stack" {
     }))
     global_tags = map(string)
   })
-  
+
   default = {
     name    = "my-app"
     version = "1.0.0"
@@ -298,7 +298,7 @@ locals {
   all_ports = distinct(flatten([
     for service in var.application_stack.services : service.ports
   ]))
-  
+
   # Create service configurations
   service_configs = {
     for service in var.application_stack.services :
@@ -441,17 +441,17 @@ locals {
   # List transformations
   active_users = [for u in var.users : u.username if u.active]
   user_emails  = [for u in var.users : u.email]
-  
+
   # Map transformations
   users_by_name = { for u in var.users : u.username => u }
   users_by_role = { for u in var.users : u.username => u.role }
-  
+
   # Grouped by role
   users_by_role_grouped = {
     for role in distinct([for u in var.users : u.role]) :
     role => [for u in var.users : u.username if u.role == role]
   }
-  
+
   # Complex transformation
   user_access_map = {
     for u in var.users :
@@ -529,13 +529,13 @@ variable "resources" {
 locals {
   # Production resources only
   prod_resources = [for r in var.resources : r if lookup(r.tags, "env", "") == "prod"]
-  
+
   # Calculate monthly costs
   monthly_costs = {
     for r in var.resources :
     r.name => r.cost_per_hour * 24 * 30
   }
-  
+
   # Group by team and calculate team costs
   team_costs = {
     for team in distinct([for r in var.resources : lookup(r.tags, "team", "unknown")]) :
@@ -545,7 +545,7 @@ locals {
       if lookup(r.tags, "team", "") == team
     ])
   }
-  
+
   # Create resource map with calculated values
   resource_analysis = {
     for r in var.resources :
@@ -610,14 +610,14 @@ locals {
   # Simple conditionals
   is_production = var.environment == "production"
   instance_size = var.environment == "production" ? "large" : "small"
-  
+
   # Nested conditionals
   backup_retention = (
     var.environment == "production" ? 30 :
     var.environment == "staging" ? 7 :
     1
   )
-  
+
   # Conditional with boolean
   monitoring_config = var.enable_monitoring ? {
     enabled      = true
@@ -626,13 +626,13 @@ locals {
   } : {
     enabled = false
   }
-  
+
   # Conditional list
   required_tags = concat(
     ["Name", "Environment"],
     var.environment == "production" ? ["CostCenter", "Owner"] : []
   )
-  
+
   # Conditional resource count
   actual_instance_count = var.environment == "production" ? var.instance_count : 1
 }
@@ -697,7 +697,7 @@ locals {
     for metric_type in distinct([for d in var.raw_data : d.metric]) :
     metric_type => [for d in var.raw_data : d if d.metric == metric_type]
   }
-  
+
   # Calculate averages by metric and source
   metric_averages = {
     for metric_type in distinct([for d in var.raw_data : d.metric]) :
@@ -712,7 +712,7 @@ locals {
       ])
     }
   }
-  
+
   # Identify high values (> 50)
   high_value_alerts = [
     for d in var.raw_data :
@@ -723,7 +723,7 @@ locals {
     }
     if d.value > 50
   ]
-  
+
   # Create summary statistics
   summary_stats = {
     total_readings = length(var.raw_data)
@@ -871,51 +871,51 @@ locals {
     for pair in local.config_pairs :
     split("=", pair)[0] => split("=", pair)[1]
   }
-  
+
   # JSON encoding/decoding
   config_json = jsonencode(local.config_map)
-  
+
   # Template rendering
   greeting_template = "Hello, ${local.config_map["team"]} team! Running ${local.config_map["app"]} v${local.config_map["version"]}"
-  
+
   # CIDR calculations
   ip_subnets = [for ip in var.ip_addresses : cidrsubnet("10.0.0.0/16", 8, index(var.ip_addresses, ip))]
-  
+
   # Merge operations
   default_tags = {
     ManagedBy = "Terraform"
     Project   = "Tutorial"
   }
-  
+
   merged_tags = merge(
     local.default_tags,
     local.config_map,
     { Timestamp = timestamp() }
   )
-  
+
   # Collection operations
   sorted_ips = sort(var.ip_addresses)
   unique_octets = distinct(flatten([
     for ip in var.ip_addresses :
     split(".", ip)
   ]))
-  
+
   # Regex operations
   version_parts = regex("^([0-9]+)\\.([0-9]+)\\.([0-9]+)$", local.config_map["version"])
   major_version = local.version_parts[0]
   minor_version = local.version_parts[1]
   patch_version = local.version_parts[2]
-  
+
   # File hash (for change detection)
   config_hash = md5(jsonencode(local.config_map))
-  
+
   # Lookup with default
   environment_config = {
     production = { replicas = 5, size = "large" }
     staging    = { replicas = 2, size = "medium" }
     dev        = { replicas = 1, size = "small" }
   }
-  
+
   current_env_config = lookup(
     local.environment_config,
     local.config_map["env"],
@@ -988,16 +988,16 @@ locals {
   converted_list   = [for s in var.mixed_inputs.list_of_nums : tonumber(s)]
   converted_bool   = tobool(var.mixed_inputs.bool_string)
   parsed_json      = jsondecode(var.mixed_inputs.json_string)
-  
+
   # Calculations with converted types
   sum_of_list  = sum(local.converted_list)
   avg_of_list  = local.sum_of_list / length(local.converted_list)
   max_in_list  = max(local.converted_list...)
   min_in_list  = min(local.converted_list...)
-  
+
   # Conditional based on converted bool
   deployment_mode = local.converted_bool ? "enabled" : "disabled"
-  
+
   # Complex object construction
   processed_data = {
     original_input  = var.mixed_inputs.string_number
@@ -1013,7 +1013,7 @@ locals {
     }
     json_data = local.parsed_json
   }
-  
+
   # Try function for safe operations
   safe_conversion = try(tonumber("not_a_number"), 0)
   safe_lookup     = try(local.parsed_json.nonexistent_key, "default_value")
@@ -1061,7 +1061,7 @@ variable "application" {
     }))
     feature_flags = map(bool)
   })
-  
+
   default = {
     name        = "ecommerce-platform"
     environment = "production"
@@ -1122,16 +1122,16 @@ locals {
       }
     ]
   ])
-  
+
   # Calculate total instances
   total_min_instances = sum([
     for d in local.deployments : d.min_instances
   ])
-  
+
   total_max_instances = sum([
     for d in local.deployments : d.max_instances
   ])
-  
+
   # Group by tier for analysis
   instances_by_tier = {
     for tier in distinct([for d in local.deployments : d.tier]) :
@@ -1142,13 +1142,13 @@ locals {
       regions           = [for d in local.deployments : d.region if d.tier == tier]
     }
   }
-  
+
   # Calculate deployment order based on dependencies
   deployment_order = {
     phase1 = [for d in local.deployments : d.id if length(d.dependencies) == 0]
     phase2 = [for d in local.deployments : d.id if length(d.dependencies) > 0]
   }
-  
+
   # Create configuration hash for each deployment
   deployment_configs = {
     for d in local.deployments :

@@ -33,8 +33,7 @@
         "redhat.vscode-yaml",
         "ms-vscode.makefile-tools",
         "ms-python.python",
-        "bierner.markdown-mermaid",
-        "streetsidesoftware.code-spell-checker"
+        "bierner.markdown-mermaid"
       ],
       "settings": {
         "terminal.integrated.defaultProfile.linux": "zsh",
