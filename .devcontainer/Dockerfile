@@ -7,6 +7,9 @@ FROM hashicorp/terraform:1.10.0 AS terraform-source
 # TFLint Source
 FROM ghcr.io/terraform-linters/tflint:v0.60.0 AS tflint-source
 
+# Packer Source
+FROM hashicorp/packer:full-1.14.2 AS packer-source
+
 # Hadolint Source
 FROM ghcr.io/hadolint/hadolint:v2.14.0-debian AS hadolint-source
 
@@ -64,6 +67,8 @@ ENV PATH="${GOPATH}/bin:${PATH}"
 # Copy the binaries
 COPY --from=terraform-source /bin/terraform /usr/local/bin/terraform
 COPY --from=tflint-source /usr/local/bin/tflint /usr/local/bin/tflint
+COPY --from=packer-source /bin/packer /usr/local/bin/packer
+COPY --from=packer-source /root/.config/packer/plugins/ /root/.config/packer/plugins/
 COPY --from=hadolint-source /bin/hadolint /usr/local/bin/hadolint
 COPY --from=golangci-lint-source /usr/bin/golangci-lint /usr/local/bin/golangci-lint
 
