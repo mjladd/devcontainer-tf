@@ -1,4 +1,6 @@
 # Devcontainer for Terraform and Go
 
-- [TF Tutorial](terraform-review-tutorial.md)
+- [AWS TF Playbook](aws-tf-playbook.md)
 - [TF Advanced Tutorial](terraform-advanced-tutorial.md)
+- [TF Console Guide](terraform-console-guide.md)
+- [AWS API Tutorial](httpie-aws-api-tutorial.md)
