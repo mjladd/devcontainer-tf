@@ -44,6 +44,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
         curl \
         unzip \
         git \
+        httpie \
         make \
         zsh \
         && rm -rf /var/lib/apt/lists/*

@@ -24,17 +24,7 @@ Let's get HTTPie installed along with the AWS authentication plugin. The standar
 
 ```bash
 # Install HTTPie if you don't have it
-# On macOS:
-brew install httpie
-
-# On Ubuntu/Debian:
-sudo apt install httpie
-
-# On any system with Python:
-pip install httpie
-
-# Install the AWS auth plugin for HTTPie
-pip install httpie-aws-authv4
+RUN uv tool install httpie --with httpie-aws-authv4
 ```
 
 You'll also need AWS credentials configured. If you already use the AWS CLI, your credentials are probably already set up in `~/.aws/credentials`. If not, create that file:
@@ -63,7 +53,14 @@ Verify the plugin is working by checking HTTPie's available auth types:
 http --help | grep -i auth
 ```
 
-## Your First AWS API Call: Describing VPCs
+## AWS S3 bucket
+
+- List all buckets
+  - `http --auth-type=aws4 --auth=":" GET https://s3.us-east-2.amazonaws.com/`
+- List objects in a specific bucket
+  - `http --auth-type=aws4 --auth=":" GET https://bucket-name.s3.us-east-2.amazonaws.com/`
+
+## AWS API Call: Describing VPCs
 
 Let's start with a simple read operation that doesn't create or modify anything. The EC2 `DescribeVpcs` action returns information about your VPCs. This corresponds to what happens when Terraform refreshes state or when you use an `aws_vpc` data source.
 

@@ -30,10 +30,8 @@ resource "null_resource" "server_setup" {
 
   provisioner "local-exec" {
 
-    command = <<=EOT
-      echo 'Setting up $(each.key):
+    command = <<-EOT
+      echo 'Setting up ${each.key}:'
     EOT
-    }
-
   }
 }
