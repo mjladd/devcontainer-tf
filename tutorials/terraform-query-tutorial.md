@@ -430,3 +430,80 @@ Your discovered resources are now managed by Terraform.
 - **Negative filters are not supported.** You cannot query for "all instances without a certain tag" directly. As a workaround, run two queries (all instances and tagged instances) and compute the difference using `locals`.
 - **The output file must be new.** The `-generate-config-out` flag will not append to or overwrite an existing file.
 - **Provider support is growing.** Check your provider's documentation for newly supported `list` resource types.
+
+## Using Terraform Query Today
+
+### Basic Workflow
+
+```terraform
+# Create query file:
+# discovery.tfquery.hcl
+list "aws_vpc" "prod_vpcs" {
+  provider = aws
+  config {
+    filter {
+      name   = "tag:Environment"
+      values = ["production"]
+    }
+  }
+}
+
+# un discovery:
+terraform query -generate-config-out=generated.tf
+
+# 3. Review and import:
+# Review generated.tf
+# Copy relevant blocks to your main.tf
+terraform apply
+```
+
+### Advanced Features
+
+#### Filtering resources:
+
+```terraform
+list "aws_instance" "running" {
+  provider = aws
+  config {
+    filter {
+      name   = "instance-state-name"
+      values = ["running"]
+    }
+    filter {
+      name   = "tag:Team"
+      values = ["platform"]
+    }
+  }
+}
+```
+
+#### Multi-region discovery:
+
+```terraform
+provider "aws" {
+  alias  = "us_east"
+  region = "us-east-1"
+}
+
+provider "aws" {
+  alias  = "eu_west"
+  region = "eu-west-1"
+}
+
+list "aws_vpc" "us" {
+  provider = aws.us_east
+}
+
+list "aws_vpc" "eu" {
+  provider = aws.eu_west
+}
+```
+
+#### Limiting results:
+
+```terraform
+list "aws_subnet" "all" {
+  provider = aws
+  limit    = 200  # Default is 100
+}
+```
