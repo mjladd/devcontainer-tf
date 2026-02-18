@@ -4,6 +4,8 @@
 
 Terraform workspaces allow you to manage multiple distinct sets of infrastructure resources using the same configuration. Think of workspaces as isolated state files that share the same codebase—perfect for managing environments like `dev`, `staging`, and `production` without duplicating your Terraform code.
 
+TF workspaces are simply a way to manage multiple state files within a single configuration. Workspaces let you switch between different states within the same configuration, providing isolated state contexts that all use the same infrastructure code, allowing for deploying the same configuration to different environments or test different variations safely.
+
 This tutorial uses only local resources (no cloud accounts required) so you can focus entirely on understanding workspaces.
 
 ---
